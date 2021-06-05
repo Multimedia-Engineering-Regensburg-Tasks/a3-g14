@@ -11,10 +11,42 @@
  * - Optional: Liste per Drag & Drop sortierbar machen
  * - ...
  */
-
-function init() {
-    console.log("### Starting Weather-App ###");
-    // Starten Sie hier mit Ihrer Implementierung
-}
-
-init();
+ import DataProvider from "./utils/DataProvider.js";
+ import InputBar from "./ui/InputBar.js";
+ 
+ const NOT_FOUND = "404";
+ var inputBar = new InputBar;
+ 
+ function init() {
+     console.log("### Starting Weather-App ###");
+     // Starten Sie hier mit Ihrer Implementierung
+     initInput();
+ }
+ 
+ function getData(city){
+     let dataProvider = new DataProvider;
+     dataProvider.loadData(city).then((data) => {
+         if(data.cod === NOT_FOUND){
+             //Stadt wurde nicht gefunden...
+         } else {
+             addWeatherWidget(data);
+         }
+     });
+ }
+ 
+ function initInput(){
+     //Ruft die Methode getData auf, wenn die Entertaste gedrückt wird.
+     inputBar.bar.addEventListener("keypress", function(e){
+         if(e.key === "Enter" && inputBar.bar.value !== ""){
+             let input = inputBar.getInput();
+             getData(input);
+         }
+     });
+ }
+ 
+ function addWeatherWidget(data){
+     //Hier kann die Stadt als Widget hinzugefügt werden...
+     console.log(data.name);
+ }
+ 
+ init();
