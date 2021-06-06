@@ -46,7 +46,60 @@
  
  function addWeatherWidget(data){
      //Hier kann die Stadt als Widget hinzugefügt werden...
-     console.log(data.name);
+     console.log(data);
+
+     //Template holen
+    var WeatherTemplate = document.getElementsByTagName("template")[0].content.firstElementChild.cloneNode(true);
+     //Data-city Befüllen
+    WeatherTemplate.attributes[1].value = data.name;
+    
+    //Icon anpassen
+    //"http://openweathermap.org/img/wn/10d@2x.png"
+    var iconsource = "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+    WeatherTemplate.children[0].children[0].src = iconsource;    
+    
+    //Ort + Temperatur Befüllen
+    // Template --> span.data --> span.main
+    var LocationName = document.createElement("span");
+    LocationName.textContent = data.name + ", " + Math.round(data.main.temp) + "°C";
+    WeatherTemplate.children[1].children[0].appendChild(LocationName);
+    
+    //min Temperature
+    //-->Template -->span.data -->span.additioal -->min.temperature --> span.value
+
+    WeatherTemplate.children[1].children[1].children[0].children[1].textContent = Math.round(data.main.temp_min) + "°C";
+    //MaxTemperature
+    WeatherTemplate.children[1].children[1].children[1].children[1].textContent = Math.round(data.main.temp_max) + "°C";
+    //Luftfreuchtigkeit
+    WeatherTemplate.children[1].children[1].children[2].children[1].textContent = data.main.humidity + "%";
+    //Luftdruck
+    WeatherTemplate.children[1].children[1].children[3].children[1].textContent = data.main.pressure +  "hPa";
+
+    //Windgeschwindigkeit
+    WeatherTemplate.children[1].children[1].children[4].children[1].textContent = data.wind.speed + "m/s";
+    
+        console.log(WeatherTemplate);
+    //var TemplateContent = document.getElementsbyID(WeatherTemplate)
+    //console.log(TemplateContent);
+
+    var widgetList = document.getElementsByTagName("ul")[0];
+    console.log(widgetList);
+    widgetList.appendChild(WeatherTemplate);
+    
+
+
+
+     //var weather = document.getElementById("weather-widget-template");
+     //
+     //console.log(widgetList);
+     //widgetList[0].appendChild(weather);
+     //var WeatherWidgets = document.getElementById("weather-widget-template");
+     //console.log(WeatherWidgets);
+     //var main = document.getElementsByClassName('main');
+     //if(data.name === true){
+     //    weather.main = data.name;
+     //}
+    
  }
  
  init();
