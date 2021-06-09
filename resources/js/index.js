@@ -45,81 +45,145 @@
      });
  }
 
- function litter(City){
-    console.log("Trying to delete " + City);
-    var rubbish = document.getElementsByTagName('ul')[0];
-    
-    for(var i = 1; i <= rubbish.length; i++){
-        console.log(rubbish.length);
-        if(City === rubbish.children[i].attributes[1].value){
-
-            console.log(rubbish[i].attributes[1].value);
-            var test = rubbish[i]
-            rubbish.removeChild(rubbish.children[i]);
-            console.log("child removed");
-        }
-    }
- }
+ 
  
  function addWeatherWidget(data){
      //Hier kann die Stadt als Widget hinzugefügt werden...
      console.log(data);
-    //Template holen
-    var WeatherTemplate = document.getElementsByTagName("template")[0].content.firstElementChild.cloneNode(true);
- 
-     //Data-city Befüllen
-    WeatherTemplate.attributes[1].value = data.name;
-    
-    //Icon anpassen
-    //"http://openweathermap.org/img/wn/10d@2x.png"
-    var iconsource = "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
-    WeatherTemplate.children[0].children[0].src = iconsource;    
-    
-    //Ort + Temperatur Befüllen
-    // Template --> span.data --> span.main
-    var LocationName = document.createElement("span");
-    LocationName.textContent = data.name + ", " + Math.round(data.main.temp) + "°C";
-    WeatherTemplate.children[1].children[0].appendChild(LocationName);
-    
-    //min Temperature
-    //-->Template -->span.data -->span.additioal -->min.temperature --> span.value
 
-    WeatherTemplate.children[1].children[1].children[0].children[1].textContent = Math.round(data.main.temp_min) + "°C";
-    //MaxTemperature
-    WeatherTemplate.children[1].children[1].children[1].children[1].textContent = Math.round(data.main.temp_max) + "°C";
-    //Luftfreuchtigkeit
-    WeatherTemplate.children[1].children[1].children[2].children[1].textContent = data.main.humidity + "%";
-    //Luftdruck
-    WeatherTemplate.children[1].children[1].children[3].children[1].textContent = data.main.pressure +  "hPa";
+    //Prüfen ob Stadt bereits in Liste existiert, falls nicht hinzufügen, falls doch aktualisieren
+    var WidgetList = document.getElementsByTagName('ul')[0];
+    var CityExists = 0
+    if (WidgetList.childElementCount > 1) // Nur Ausführen wenn Bereits eine Stadt in der Liste enthalten ist
+    {
+        for(var i = 1; i <= WidgetList.children.length; i++)
+        {
+            if(data.name === WidgetList.children[i].attributes[1].value){
+                CityExists = i;
+                break;
+            }
+        }        
+    }
 
-    //Windgeschwindigkeit
-    WeatherTemplate.children[1].children[1].children[4].children[1].textContent = data.wind.speed + "m/s";
-    
-        //console.log(WeatherTemplate);
 
-                    // --> controls --> delete
-    var DeleteCode = '<span onclick="litter(' + data.name + ')"><i class="fas fa-trash"></i></span>';
-    WeatherTemplate.children[2].children[1].innerHTML = DeleteCode; 
-    //("click", litter(data));
-    
-    var widgetList = document.getElementsByTagName("ul")[0];
-    console.log(widgetList);
-    
-    widgetList.appendChild(WeatherTemplate);
-    
-   /* var litter = document.getElementsByClassName('delete')[0].addEventListener("click", function(event){
-        console.log("delete");
-        widgetList.parentNode.removeChild(widgetList);
- });
+    if(CityExists > 0) //Stadt Existiert bereits
+    {
+        //Icon anpassen
+        //"http://openweathermap.org/img/wn/10d@2x.png"
+        var iconsource = "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+        var icon = WidgetList.children[i].querySelector('.icon');
+        icon.children[0].src = iconsource;    
+        
+        //Ort + Temperatur Befüllen
+        // Template --> span.data --> span.main
 
- document.getElementsByClassName('update')[0].addEventListener("click", function(){
-     console.log("update");
- })
- */
+        var CityandTemp = WidgetList.children[i].querySelector('.main');
+        var CurrentString = CityandTemp.querySelector('span')
+        CurrentString.textContent = data.name + ", " + Math.round(data.main.temp) + "°C";
+        
+        
+        //min Temperature
+        var MinTemperature = WidgetList.children[i].querySelector('.container.min-temperature');
+        MinTemperature.innerText = Math.round(data.main.temp_min) + "°C";
+
+        ////MaxTemperature
+        var MaxTemperature = WidgetList.children[i].querySelector('.container.max-temperature');
+        MaxTemperature.children[1].innerText = Math.round(data.main.temp_max) + "°C";    
+        
+        ////Luftfreuchtigkeit
+        var Humidity = WidgetList.children[i].querySelector('.container.humidity');
+        Humidity.children[1].innerText = Math.round(data.main.humidity) + "%";
+        
+        ////Luftdruck
+        var Pressure = WidgetList.children[i].querySelector('.container.pressure');
+        Pressure.children[1].innerText = Math.round(data.main.pressure) + "hPa";
+        
+        ////Windgeschwindigkeit
+        var WindSpeed = WidgetList.children[i].querySelector('.container.wind');
+        WindSpeed.children[1].innerText = data.wind.speed;        
+    }
+    else //Stadt existiert noch nicht
+    {
+        //Template holen und duplizieren
+        var template = document.querySelector('#weather-widget-template');
+        var WeatherTemplate = template.cloneNode(true);
+        
+        //Data-city Befüllen
+        var datacity = WeatherTemplate.content.querySelector('.widget');
+        datacity.attributes[1].value = data.name;
+        
+        //Icon anpassen
+        //"http://openweathermap.org/img/wn/10d@2x.png"
+        var iconsource = "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+        var icon = WeatherTemplate.content.querySelector('.icon');
+        icon.children[0].src = iconsource;    
+        
+        //Ort + Temperatur Befüllen
+        // Template --> span.data --> span.main
+
+        var CityandTemp = WeatherTemplate.content.querySelector('.main');
+
+        var LocationName = document.createElement("span");
+        LocationName.textContent = data.name + ", " + Math.round(data.main.temp) + "°C";
+        CityandTemp.appendChild(LocationName);
+        
+        //min Temperature
+        var MinTemperature = WeatherTemplate.content.querySelector('.container.min-temperature');
+        MinTemperature.innerText = Math.round(data.main.temp_min) + "°C";
+
+        ////MaxTemperature
+        var MaxTemperature = WeatherTemplate.content.querySelector('.container.max-temperature');
+        MaxTemperature.children[1].innerText = Math.round(data.main.temp_max) + "°C";    
+        
+        ////Luftfreuchtigkeit
+        var Humidity = WeatherTemplate.content.querySelector('.container.humidity');
+        Humidity.children[1].innerText = Math.round(data.main.humidity) + "%";
+        
+        ////Luftdruck
+        var Pressure = WeatherTemplate.content.querySelector('.container.pressure');
+        Pressure.children[1].innerText = Math.round(data.main.pressure) + "hPa";
+        
+        ////Windgeschwindigkeit
+        var WindSpeed = WeatherTemplate.content.querySelector('.container.wind');
+        WindSpeed.children[1].innerText = data.wind.speed;
+        
+        var DeleteButton = WeatherTemplate.content.querySelector('.delete');
+        console.log(DeleteButton);
+        DeleteButton.addEventListener("click", function(){
+            litter(this.parentNode.parentNode.attributes[1].textContent);
+        });
+
+
+        var UpdateButton = WeatherTemplate.content.querySelector('.update');
+        UpdateButton.addEventListener("click", function(){
+            getData(this.parentNode.parentNode.attributes[1].textContent);
+        });
+
+        WidgetList.appendChild(WeatherTemplate.content);
+    }
+
 
     
+  
  }
 
+ 
 
+
+ function litter(City){
+    console.log("Trying to delete " + City);
+    var rubbish = document.getElementsByTagName('ul')[0];
+    
+    for(var i = 1; i <= rubbish.children.length; i++){
+        console.log(rubbish.children.length);
+        if(City === rubbish.children[i].attributes[1].value){
+
+            console.log(rubbish.children[i].attributes[1].value);
+            rubbish.removeChild(rubbish.children[i]);
+            console.log("child removed");
+            break;
+        }
+    }
+ }
  
  init();
