@@ -16,6 +16,7 @@
  
  const NOT_FOUND = "404";
  var inputBar = new InputBar;
+    
  
  function init() {
      console.log("### Starting Weather-App ###");
@@ -43,13 +44,29 @@
          }
      });
  }
+
+ function litter(City){
+    console.log("Trying to delete " + City);
+    var rubbish = document.getElementsByTagName('ul')[0];
+    
+    for(var i = 1; i <= rubbish.length; i++){
+        console.log(rubbish.length);
+        if(City === rubbish.children[i].attributes[1].value){
+
+            console.log(rubbish[i].attributes[1].value);
+            var test = rubbish[i]
+            rubbish.removeChild(rubbish.children[i]);
+            console.log("child removed");
+        }
+    }
+ }
  
  function addWeatherWidget(data){
      //Hier kann die Stadt als Widget hinzugefügt werden...
      console.log(data);
-
-     //Template holen
+    //Template holen
     var WeatherTemplate = document.getElementsByTagName("template")[0].content.firstElementChild.cloneNode(true);
+ 
      //Data-city Befüllen
     WeatherTemplate.attributes[1].value = data.name;
     
@@ -78,28 +95,31 @@
     //Windgeschwindigkeit
     WeatherTemplate.children[1].children[1].children[4].children[1].textContent = data.wind.speed + "m/s";
     
-        console.log(WeatherTemplate);
-    //var TemplateContent = document.getElementsbyID(WeatherTemplate)
-    //console.log(TemplateContent);
+        //console.log(WeatherTemplate);
 
+                    // --> controls --> delete
+    var DeleteCode = '<span onclick="litter(' + data.name + ')"><i class="fas fa-trash"></i></span>';
+    WeatherTemplate.children[2].children[1].innerHTML = DeleteCode; 
+    //("click", litter(data));
+    
     var widgetList = document.getElementsByTagName("ul")[0];
     console.log(widgetList);
+    
     widgetList.appendChild(WeatherTemplate);
     
+   /* var litter = document.getElementsByClassName('delete')[0].addEventListener("click", function(event){
+        console.log("delete");
+        widgetList.parentNode.removeChild(widgetList);
+ });
 
+ document.getElementsByClassName('update')[0].addEventListener("click", function(){
+     console.log("update");
+ })
+ */
 
-
-     //var weather = document.getElementById("weather-widget-template");
-     //
-     //console.log(widgetList);
-     //widgetList[0].appendChild(weather);
-     //var WeatherWidgets = document.getElementById("weather-widget-template");
-     //console.log(WeatherWidgets);
-     //var main = document.getElementsByClassName('main');
-     //if(data.name === true){
-     //    weather.main = data.name;
-     //}
     
  }
+
+
  
  init();
