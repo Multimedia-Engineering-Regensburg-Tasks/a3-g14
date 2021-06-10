@@ -15,12 +15,13 @@
  import InputBar from "./ui/InputBar.js";
  
  const NOT_FOUND = "404";
- var inputBar = new InputBar;
-    
- 
+ var inputBar = new InputBar,
+     cityList = new Array();
+
  function init() {
      console.log("### Starting Weather-App ###");
      // Starten Sie hier mit Ihrer Implementierung
+     addFromLocalStorage();
      initInput();
  }
  
@@ -38,6 +39,7 @@
             }
           else {
              addWeatherWidget(data);
+             
          }
      });
  }
@@ -48,16 +50,12 @@
          if(e.key === "Enter" && inputBar.bar.value !== ""){
              let input = inputBar.getInput();
              getData(input);
+             saveInLocaleStorage(input);
          }
      });
  }
 
- 
- 
  function addWeatherWidget(data){
-     //Hier kann die Stadt als Widget hinzugefügt werden...
-     console.log(data);
-
     //Prüfen ob Stadt bereits in Liste existiert, falls nicht hinzufügen, falls doch aktualisieren
     var WidgetList = document.getElementsByTagName('ul')[0];
     var CityExists = 0
@@ -71,7 +69,6 @@
             break;
         }        
     }
-
 
     if(CityExists > 0) //Stadt Existiert bereits
     {
@@ -87,8 +84,7 @@
         var CityandTemp = WidgetList.children[i].querySelector('.main');
         var CurrentString = CityandTemp.querySelector('span')
         CurrentString.textContent = data.name + ", " + Math.round(data.main.temp) + "°C";
-        
-        
+    
         //min Temperature
         var MinTemperature = WidgetList.children[i].querySelector('.container.min-temperature');
         MinTemperature.innerText = Math.round(data.main.temp_min) + "°C";
@@ -160,7 +156,6 @@
             litter(this.parentNode.parentNode.attributes[1].textContent);
         });
 
-
         var UpdateButton = WeatherTemplate.content.querySelector('.update');
         UpdateButton.addEventListener("click", function(){
             getData(this.parentNode.parentNode.attributes[1].textContent);
@@ -171,8 +166,34 @@
 
  }
 
- 
+ function saveInLocaleStorage (city){
+     if(!cityList.includes(city)){
+        cityList.push(city);
+        localStorage.setItem("cities", JSON.stringify(cityList));
+     }
+ }
 
+ function deleteFromLocalStorage(city){
+     cityList = cityList.filter(function(item) {
+        return item !== city;
+    });
+    localStorage.setItem("cities", JSON.stringify(cityList));
+ }
+
+ function addFromLocalStorage(){
+     if(localStorage.getItem("cities") === null){
+         localStorage.setItem("cities", JSON.stringify(cityList));
+     } else {
+         cityList = JSON.parse(localStorage.getItem("cities"));
+            for (let index = 0; index < cityList.length; index++) {
+                let city = cityList[index];
+                console.log(city);
+                if(city!== ""){
+                    getData(city);
+                }
+            }
+     }
+ }
 
  function litter(City){
     console.log("Trying to delete " + City);
@@ -183,6 +204,7 @@
         if(City === rubbish.children[i].attributes[1].value){
 
             console.log(rubbish.children[i].attributes[1].value);
+            deleteFromLocalStorage(rubbish.children[i].attributes[1].value);
             rubbish.removeChild(rubbish.children[i]);
             console.log("child removed");
             break;
