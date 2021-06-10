@@ -18,18 +18,18 @@
  var inputBar = new InputBar,
      cityList = new Array();
 
+    //Die im localstorage gespeicherten Städte werden geladen und die InputBar initialisiert.
  function init() {
      console.log("### Starting Weather-App ###");
-     // Starten Sie hier mit Ihrer Implementierung
      addFromLocalStorage();
      initInput();
  }
  
+    //Falls die Stadt im OpenWeatherApiClient existiert, werden die Daten des DataProviders an die addWeatherWidget Methode übergeben.
  function getData(city){
      let dataProvider = new DataProvider;
      dataProvider.loadData(city).then((data) => {
          if(data.cod === NOT_FOUND){
-             //Stadt wurde nicht gefunden...
              let widgetList = document.querySelector(".widget.add-item");
              widgetList.classList.add("show-error-animation");
              widgetList.addEventListener("animationend", function(){
@@ -165,6 +165,7 @@
 
  }
 
+ // speicher jede neu hinzugefügte Stadt im localstorage
  function saveInLocaleStorage (city){
      if(!cityList.includes(city)){
         cityList.push(city);
@@ -172,6 +173,7 @@
      }
  }
 
+ //Eine übergebene Stadt wird aus dem localstorage entfernt
  function deleteFromLocalStorage(city){
      cityList = cityList.filter(function(item) {
         return item !== city;
@@ -179,6 +181,8 @@
     localStorage.setItem("cities", JSON.stringify(cityList));
  }
 
+ //Falls noch keine Eintragung im local storage vorhanden ist, wird eine neues Array in Form einer JSON Datei im localstorage gespeichert.
+ //Alle gespeicherten Städte werden der getData() Methode übergeben.
  function addFromLocalStorage(){
      if(localStorage.getItem("cities") === null){
          localStorage.setItem("cities", JSON.stringify(cityList));
