@@ -63,12 +63,12 @@
     var CityExists = 0
     if (WidgetList.childElementCount > 1) // Nur Ausführen wenn Bereits eine Stadt in der Liste enthalten ist
     {
-        for(var i = 1; i <= WidgetList.children.length; i++)
+        for(var i = 1; i < WidgetList.children.length; i++)
         {
             if(data.name === WidgetList.children[i].attributes[1].value){
                 CityExists = i;
+                break;
             }
-            break;
         }        
     }
 
