@@ -60,8 +60,8 @@
         {
             if(data.name === WidgetList.children[i].attributes[1].value){
                 CityExists = i;
-                break;
             }
+            break;
         }        
     }
 
@@ -162,9 +162,6 @@
         WidgetList.appendChild(WeatherTemplate.content);
     }
 
-
-    
-  
  }
 
  
