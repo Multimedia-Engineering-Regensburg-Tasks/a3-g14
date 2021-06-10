@@ -77,7 +77,7 @@
  }
 
  function litter(City){
-    var rubbish = document.getElementsByTagName('ul')[0];
+    var rubbish = document.getElementsByTagName("ul")[0];
     
     for(let i = 1; i <= rubbish.children.length; i++){
         if(City === rubbish.children[i].attributes[1].value){

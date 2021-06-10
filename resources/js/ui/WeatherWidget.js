@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* eslint-disable no-undef */
 
 var widgetList = document.getElementsByTagName("ul")[0],
     CityExists = 0;
