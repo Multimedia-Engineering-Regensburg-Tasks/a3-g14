@@ -28,11 +28,10 @@
      let dataProvider = new DataProvider;
      dataProvider.loadData(city).then((data) => {
          if(data.cod === NOT_FOUND){
-             console.log("Stadt wurde nicht gefunden...");
+             //Stadt wurde nicht gefunden...
              let widgetList = document.querySelector(".widget.add-item");
              widgetList.classList.add("show-error-animation");
              widgetList.addEventListener("animationend", function(){
-                 console.log("event");
                  widgetList.classList.remove("show-error-animation");
              });
             }
@@ -56,7 +55,6 @@
  
  function addWeatherWidget(data){
      //Hier kann die Stadt als Widget hinzugefügt werden...
-     console.log(data);
 
     //Prüfen ob Stadt bereits in Liste existiert, falls nicht hinzufügen, falls doch aktualisieren
     var WidgetList = document.getElementsByTagName('ul')[0];
@@ -155,7 +153,6 @@
         WindSpeed.children[1].innerText = data.wind.speed;
         
         var DeleteButton = WeatherTemplate.content.querySelector('.delete');
-        console.log(DeleteButton);
         DeleteButton.addEventListener("click", function(){
             litter(this.parentNode.parentNode.attributes[1].textContent);
         });
@@ -175,16 +172,11 @@
 
 
  function litter(City){
-    console.log("Trying to delete " + City);
     var rubbish = document.getElementsByTagName('ul')[0];
     
     for(var i = 1; i <= rubbish.children.length; i++){
-        console.log(rubbish.children.length);
         if(City === rubbish.children[i].attributes[1].value){
-
-            console.log(rubbish.children[i].attributes[1].value);
             rubbish.removeChild(rubbish.children[i]);
-            console.log("child removed");
             break;
         }
     }
