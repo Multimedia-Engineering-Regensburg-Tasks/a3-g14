@@ -28,13 +28,15 @@
      let dataProvider = new DataProvider;
      dataProvider.loadData(city).then((data) => {
          if(data.cod === NOT_FOUND){
-             //Stadt wurde nicht gefunden...
+             console.log("Stadt wurde nicht gefunden...");
              let widgetList = document.querySelector(".widget.add-item");
              widgetList.classList.add("show-error-animation");
-             widgetList.addEventListener("animationed", function(){
+             widgetList.addEventListener("animationend", function(){
+                 console.log("event");
                  widgetList.classList.remove("show-error-animation");
              });
-         } else {
+            }
+          else {
              addWeatherWidget(data);
          }
      });
