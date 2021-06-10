@@ -153,6 +153,7 @@
         var DeleteButton = WeatherTemplate.content.querySelector('.delete');
         DeleteButton.addEventListener("click", function(){
             litter(this.parentNode.parentNode.attributes[1].textContent);
+            deleteFromLocalStorage(this.parentNode.parentNode.attributes[1].textContent);
         });
 
         var UpdateButton = WeatherTemplate.content.querySelector('.update');
